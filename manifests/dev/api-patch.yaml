@@ -1,0 +1,19 @@
+# Strategic merge patch — only fields listed here are changed.
+# Everything else is inherited unchanged from base/api-deployment.yaml.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1   # dev: single replica
+  template:
+    spec:
+      containers:
+        - name: api
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

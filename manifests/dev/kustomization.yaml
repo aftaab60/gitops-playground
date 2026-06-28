@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# All resources in this overlay will be placed into the gitops-dev namespace.
+namespace: gitops-dev
+
+resources:
+  - namespace.yaml   # create the namespace first
+  - ../base          # inherit all base resources
+
+# Patch only what changes between dev and prod.
+patches:
+  - path: api-patch.yaml
+    target:
+      kind: Deployment
+      name: api

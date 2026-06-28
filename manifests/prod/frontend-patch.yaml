@@ -1,0 +1,19 @@
+# Prod: 2 replicas, stronger resource limits.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: frontend
+          image: gitops-tracker-frontend:prod  # Kargo will update this tag
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+spec:
+  selector:
+    app: api
+  ports:
+    - port: 8080
+      targetPort: 8080
+  # ClusterIP — the frontend nginx proxies /api/ requests to this service.
+  # Use kubectl port-forward svc/api-service 8080:8080 to reach it externally.

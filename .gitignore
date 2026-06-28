@@ -1,0 +1,19 @@
+# Go
+api/server
+
+# Flutter
+frontend/build/
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+*.swp
+
+# Claude Code
+.claude/

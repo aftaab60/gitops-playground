@@ -1,0 +1,24 @@
+# Prod: 3 replicas, stronger resource limits, production image tag.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: api
+          image: gitops-tracker-api:prod  # Kargo will update this tag
+          env:
+            - name: LOG_LEVEL
+              value: info
+            - name: JWT_SECRET
+              value: "REPLACE_WITH_REAL_SECRET"  # use a Secret + secretKeyRef in real prod
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
