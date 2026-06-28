@@ -1,0 +1,18 @@
+# Staging: 1 frontend replica with moderate resources.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: frontend
+          resources:
+            requests:
+              cpu: 75m
+              memory: 48Mi
+            limits:
+              cpu: 150m
+              memory: 96Mi
