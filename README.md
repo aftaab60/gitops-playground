@@ -199,6 +199,11 @@ kubectl port-forward svc/api-service 8080:8080 -n gitops-dev
 
 Accept the self-signed cert warning in both browsers.
 
+> **Before the presentation:** the GitHub PAT in the credentials secret (step 7) expires.
+> Generate a fresh one at https://github.com/settings/tokens (repo scope) right before the demo,
+> then re-run the `kubectl create secret` command from step 7 with the new token.
+> It is the one thing that does not survive a cluster restart.
+
 ---
 
 ## Verify Everything Is Up
