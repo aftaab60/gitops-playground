@@ -44,9 +44,5 @@ spec:
             path: ./repo
             targetBranch: main
 
-        # 5. Tell Argo CD to sync the dev Application immediately
-        - uses: argocd-update
-          config:
-            apps:
-              - name: gitops-tracker-dev
-                namespace: argocd
+        # Argo CD picks up the Git change automatically via its 3-min poll cycle.
+        # (argocd-update skipped — needs extra RBAC setup in Argo CD AppProject)

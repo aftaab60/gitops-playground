@@ -41,8 +41,4 @@ spec:
             path: ./repo
             targetBranch: main
 
-        - uses: argocd-update
-          config:
-            apps:
-              - name: gitops-tracker-staging
-                namespace: argocd
+        # Argo CD picks up the Git change automatically via its 3-min poll cycle.
