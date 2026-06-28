@@ -2,11 +2,6 @@ apiVersion: kargo.akuity.io/v1alpha1
 kind: Project
 metadata:
   name: gitops-tracker
-spec:
-  # Auto-promote new Freight to dev and staging automatically.
-  # Prod is NOT listed here — it requires a manual promotion trigger.
-  promotionPolicies:
-    - stage: dev
-      autoPromotionEnabled: true
-    - stage: staging
-      autoPromotionEnabled: true
+  # A Project in Kargo v1 is a namespace wrapper — it creates the gitops-tracker
+  # namespace and registers it as a Kargo project. Promotion policies are
+  # configured per-Stage via annotations or the Kargo UI.

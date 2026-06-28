@@ -31,12 +31,13 @@ spec:
             path: repo/manifests/prod
             images:
               - image: nginx
+                tag: ${{ imageFrom("nginx").Tag }}
 
         - uses: git-commit
           as: commit
           config:
             path: ./repo
-            message: 'chore(prod): promote nginx to ${{ imageFrom "nginx" | tag }}'
+            message: 'chore(prod): promote nginx to ${{ imageFrom("nginx").Tag }}'
 
         - uses: git-push
           config:
@@ -48,6 +49,3 @@ spec:
             apps:
               - name: gitops-tracker-prod
                 namespace: argocd
-                sources:
-                  - repoURL: https://github.com/aftaab60/gitops-playground.git
-                    desiredCommitFromStep: commit

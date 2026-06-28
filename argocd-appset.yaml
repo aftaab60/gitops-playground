@@ -21,6 +21,9 @@ spec:
   template:
     metadata:
       name: 'gitops-tracker-{{.env}}'
+      annotations:
+        # Grants the Kargo Stage of the same name permission to sync this Application.
+        kargo.akuity.io/authorized-stages: 'gitops-tracker:{{.env}}'
     spec:
       project: default
       source:

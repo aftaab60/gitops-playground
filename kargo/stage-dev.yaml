@@ -29,13 +29,14 @@ spec:
             path: repo/manifests/dev
             images:
               - image: nginx
+                tag: ${{ imageFrom("nginx").Tag }}
 
         # 3. Commit the change
         - uses: git-commit
           as: commit
           config:
             path: ./repo
-            message: 'chore(dev): promote nginx to ${{ imageFrom "nginx" | tag }}'
+            message: 'chore(dev): promote nginx to ${{ imageFrom("nginx").Tag }}'
 
         # 4. Push to main
         - uses: git-push
@@ -49,6 +50,3 @@ spec:
             apps:
               - name: gitops-tracker-dev
                 namespace: argocd
-                sources:
-                  - repoURL: https://github.com/aftaab60/gitops-playground.git
-                    desiredCommitFromStep: commit
