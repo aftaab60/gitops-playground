@@ -8,6 +8,10 @@ resources:
   - ../base
 
 patches:
+  - path: app-config-patch.yaml
+    target:
+      kind: ConfigMap
+      name: app-config
   - path: api-patch.yaml
     target:
       kind: Deployment

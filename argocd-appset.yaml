@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: gitops-tracker
+  namespace: argocd
+spec:
+  # goTemplate: true is required in Argo CD v3 to enable Go template variable expansion.
+  # Without it, {{ .env }} is treated as a literal string instead of a variable.
+  goTemplate: true
+
+  generators:
+    - list:
+        elements:
+          - env: dev
+            namespace: gitops-dev
+          - env: staging
+            namespace: gitops-staging
+          - env: prod
+            namespace: gitops-prod
+
+  template:
+    metadata:
+      name: 'gitops-tracker-{{.env}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/aftaab60/gitops-playground.git
+        targetRevision: main
+        path: 'manifests/{{.env}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.namespace}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

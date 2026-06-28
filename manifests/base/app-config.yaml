@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  annotations:
+    # Wave -1 means: apply this BEFORE all wave-0 resources (Deployments, Services, etc).
+    # Argo CD will wait for this ConfigMap to exist and be healthy before proceeding.
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  APP_ENV: "set-by-overlay"        # overridden per environment via Kustomize patch
+  FEATURE_PROGRESS_API: "true"
+  LOG_FORMAT: "json"

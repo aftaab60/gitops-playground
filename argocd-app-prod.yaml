@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-tracker-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/aftaab60/gitops-playground.git
+    targetRevision: main
+    path: manifests/prod           # only this line differs
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitops-prod         # and this one
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
