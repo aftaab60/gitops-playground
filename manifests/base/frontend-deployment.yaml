@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: gitops-tracker-frontend:dev
+          image: nginx:alpine        # placeholder until Flutter build is ready
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
