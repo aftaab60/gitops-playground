@@ -17,3 +17,4 @@ frontend/.packages
 
 # Claude Code
 .claude/
+kargo/credentials.yaml

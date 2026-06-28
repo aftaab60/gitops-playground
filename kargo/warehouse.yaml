@@ -1,0 +1,12 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: frontend-warehouse
+  namespace: gitops-tracker
+spec:
+  subscriptions:
+    - image:
+        # Watch Docker Hub for new stable nginx tags (x.y.z format).
+        repoURL: nginx
+        allowTags: '^\d+\.\d+\.\d+$'   # e.g. 1.27.3 — excludes "latest", "alpine"
+        discoveryLimit: 5               # keep the 5 most recent tags as candidates

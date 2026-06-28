@@ -1,0 +1,54 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: gitops-tracker
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: frontend-warehouse
+      sources:
+        direct: true   # dev receives Freight directly from the Warehouse
+
+  promotionTemplate:
+    spec:
+      steps:
+        # 1. Clone the GitOps repo
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/aftaab60/gitops-playground.git
+            checkout:
+              - branch: main
+                path: ./repo
+
+        # 2. Update the nginx image tag in the dev overlay's kustomization.yaml
+        - uses: kustomize-set-image
+          as: update-image
+          config:
+            path: repo/manifests/dev
+            images:
+              - image: nginx
+
+        # 3. Commit the change
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: 'chore(dev): promote nginx to ${{ imageFrom "nginx" | tag }}'
+
+        # 4. Push to main
+        - uses: git-push
+          config:
+            path: ./repo
+            targetBranch: main
+
+        # 5. Tell Argo CD to sync the dev Application immediately
+        - uses: argocd-update
+          config:
+            apps:
+              - name: gitops-tracker-dev
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/aftaab60/gitops-playground.git
+                    desiredCommitFromStep: commit

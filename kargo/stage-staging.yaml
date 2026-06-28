@@ -1,0 +1,50 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: gitops-tracker
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: frontend-warehouse
+      sources:
+        stages:
+          - dev   # staging only receives Freight that has already been verified in dev
+
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/aftaab60/gitops-playground.git
+            checkout:
+              - branch: main
+                path: ./repo
+
+        - uses: kustomize-set-image
+          as: update-image
+          config:
+            path: repo/manifests/staging
+            images:
+              - image: nginx
+
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: 'chore(staging): promote nginx to ${{ imageFrom "nginx" | tag }}'
+
+        - uses: git-push
+          config:
+            path: ./repo
+            targetBranch: main
+
+        - uses: argocd-update
+          config:
+            apps:
+              - name: gitops-tracker-staging
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/aftaab60/gitops-playground.git
+                    desiredCommitFromStep: commit

@@ -7,6 +7,11 @@ resources:
   - namespace.yaml
   - ../base
 
+# Kargo updates newTag here when promoting a new nginx version to staging.
+images:
+  - name: nginx
+    newTag: alpine
+
 patches:
   - path: app-config-patch.yaml
     target:

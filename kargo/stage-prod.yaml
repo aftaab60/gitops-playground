@@ -1,0 +1,53 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: gitops-tracker
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: frontend-warehouse
+      sources:
+        stages:
+          - staging   # prod only receives Freight that passed through staging
+
+  # No auto-promotion policy → every prod promotion requires a manual trigger.
+  # In the Kargo UI: click the Freight, click "Promote to prod", confirm.
+
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: git-clone
+          config:
+            repoURL: https://github.com/aftaab60/gitops-playground.git
+            checkout:
+              - branch: main
+                path: ./repo
+
+        - uses: kustomize-set-image
+          as: update-image
+          config:
+            path: repo/manifests/prod
+            images:
+              - image: nginx
+
+        - uses: git-commit
+          as: commit
+          config:
+            path: ./repo
+            message: 'chore(prod): promote nginx to ${{ imageFrom "nginx" | tag }}'
+
+        - uses: git-push
+          config:
+            path: ./repo
+            targetBranch: main
+
+        - uses: argocd-update
+          config:
+            apps:
+              - name: gitops-tracker-prod
+                namespace: argocd
+                sources:
+                  - repoURL: https://github.com/aftaab60/gitops-playground.git
+                    desiredCommitFromStep: commit

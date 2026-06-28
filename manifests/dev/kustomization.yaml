@@ -8,6 +8,11 @@ resources:
   - namespace.yaml   # create the namespace first
   - ../base          # inherit all base resources
 
+# Kargo updates newTag here when promoting a new nginx version to dev.
+images:
+  - name: nginx
+    newTag: alpine
+
 # Patch only what changes between dev and prod.
 patches:
   - path: app-config-patch.yaml
